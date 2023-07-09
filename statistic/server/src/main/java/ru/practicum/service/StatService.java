@@ -4,14 +4,14 @@ package ru.practicum.service;
 import ru.practicum.model.HitDto;
 import ru.practicum.model.StatDto;
 
-import javax.xml.bind.ValidationException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface StatService {
     void hit(HitDto hit);
 
-    List<StatDto> getStats(String startString,
-                                  String endString,
-                                  List<String> uris,
-                                  boolean unique) throws ValidationException;
+    List<StatDto> getStats(LocalDateTime startString,
+                           LocalDateTime endString,
+                           List<String> uris,
+                           boolean unique);
 }
