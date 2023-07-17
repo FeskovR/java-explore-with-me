@@ -1,9 +1,10 @@
-package ru.practicum.user;
+package ru.practicum.user.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.user.service.UserService;
 import ru.practicum.user.model.NewUserRequest;
 import ru.practicum.user.model.UserDto;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @RequestMapping("/admin/users")
 @Slf4j
 @AllArgsConstructor
-public class UserController {
+public class AdminUserController {
     UserService userService;
 
     @GetMapping

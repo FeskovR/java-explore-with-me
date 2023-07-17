@@ -1,4 +1,4 @@
-package ru.practicum.user;
+package ru.practicum.user.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.error.exception.NotFoundException;
+import ru.practicum.user.repository.UserRepository;
 import ru.practicum.user.model.NewUserRequest;
 import ru.practicum.user.model.UserDto;
 import ru.practicum.user.model.UserMapper;
