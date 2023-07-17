@@ -8,7 +8,6 @@ import ru.practicum.category.model.CategoryDto;
 import ru.practicum.category.model.CategoryMapper;
 import ru.practicum.category.model.NewCategoryDto;
 import ru.practicum.error.exception.NotFoundException;
-import ru.practicum.error.exception.ValidationException;
 import ru.practicum.util.Validator;
 
 import java.util.List;

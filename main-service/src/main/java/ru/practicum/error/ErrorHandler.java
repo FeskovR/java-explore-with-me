@@ -1,6 +1,5 @@
 package ru.practicum.error;
 
-import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
 import org.postgresql.util.PSQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
