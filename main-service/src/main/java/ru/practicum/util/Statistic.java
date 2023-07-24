@@ -3,6 +3,7 @@ package ru.practicum.util;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.StatClient;
+import ru.practicum.error.exception.ValidationException;
 import ru.practicum.event.model.EventFullDto;
 import ru.practicum.event.model.EventShortDto;
 import ru.practicum.model.StatDto;
@@ -23,6 +24,9 @@ public class Statistic {
                                       LocalDateTime start,
                                       LocalDateTime end,
                                       boolean unique) {
+        if (start != null && end != null && end.isBefore(start)) {
+            throw new ValidationException("Invalid start-end range");
+        }
         List<String> uris = new ArrayList<>();
         Map<Integer, Long> hits = new HashMap<>();
         for (Integer eventId : eventIds) {

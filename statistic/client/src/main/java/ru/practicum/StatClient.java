@@ -24,7 +24,6 @@ public class StatClient extends BaseClient {
     }
 
     public ResponseEntity<Object> hit(HitDto hitDto) {
-        System.out.println("Add hit to statistic");
         return post("/hit", hitDto);
     }
 
@@ -32,7 +31,7 @@ public class StatClient extends BaseClient {
                       String end,
                       List<String> uris,
                       Boolean unique) {
-        System.out.println("Get statistics");
+
         String startParam = "start=" + start;
         String endParam = "end=" + end;
         String urisParam = null;
