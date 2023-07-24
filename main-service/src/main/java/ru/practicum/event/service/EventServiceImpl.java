@@ -182,7 +182,7 @@ public class EventServiceImpl implements EventService {
                             eventEntity.getConfirmedRequests() >= eventEntity.getParticipantLimit() &&
                             eventEntity.getParticipantLimit() != 0) {
                                 throw new BreakingRulesException("Limit of participant");
-                } else if (body.getStatus() == EventRequestStatus.REJECTED){
+                } else if (body.getStatus() == EventRequestStatus.REJECTED) {
                     Optional<ParticipationEntity> participation = requestRepository.findById(eventRequest.getId());
                     if (participation.isPresent() &&
                         participation.get().getStatus() == EventRequestStatus.CONFIRMED) {
@@ -245,7 +245,7 @@ public class EventServiceImpl implements EventService {
             result = new ArrayList<>();
         }
 
-        if (states != null &&!(states.size() == 1 && states.get(0) == null)) {
+        if (states != null && !(states.size() == 1 && states.get(0) == null)) {
             for (EventEntity event : preResult) {
                 if (states.contains(event.getState().toString())) {
                     result.add(event);
