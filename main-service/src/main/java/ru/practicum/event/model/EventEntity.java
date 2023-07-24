@@ -35,9 +35,14 @@ public class EventEntity {
     private int participantLimit;
     @Column(name = "confirmed_requests")
     private int confirmedRequests;
+    @Enumerated(value = EnumType.STRING)
     private EventStatus state;
+    @Column(name = "location_lat")
     private double locationLat;
+    @Column(name = "location_lon")
     private double locationLon;
+    @ManyToOne
     private CategoryDto category;
+    @ManyToOne
     private UserDto initiator;
 }

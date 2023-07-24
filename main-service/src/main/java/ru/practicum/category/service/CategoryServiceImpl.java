@@ -8,7 +8,10 @@ import ru.practicum.category.repository.CategoryRepository;
 import ru.practicum.category.model.CategoryDto;
 import ru.practicum.category.model.CategoryMapper;
 import ru.practicum.category.model.NewCategoryDto;
+import ru.practicum.error.exception.BreakingRulesException;
 import ru.practicum.error.exception.NotFoundException;
+import ru.practicum.event.model.EventEntity;
+import ru.practicum.event.repository.EventRepository;
 import ru.practicum.util.Validator;
 
 import java.util.List;
@@ -17,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     CategoryRepository categoryRepository;
+    EventRepository eventRepository;
 
     @Override
     public CategoryDto addCategory(NewCategoryDto newCategoryDto) {
@@ -39,7 +43,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(int catId) {
-        //todo Сделать проверку на привязанность событий
+        List<EventEntity> eventEntityList = eventRepository.findAllEventsByCategoryId(catId);
+        if (eventEntityList.size() > 0) {
+            throw new BreakingRulesException("Cannot delete category with events");
+        }
         categoryRepository.deleteById(catId);
     }
 

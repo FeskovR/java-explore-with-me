@@ -15,10 +15,10 @@ public class NewEventDto {
     private String annotation;
     private String description;
     private Integer category;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
     private Location location;
-    private boolean paid;
-    private int participantLimit;
-    private boolean requestModeration;
+    private boolean paid = false;
+    private int participantLimit = 0;
+    private boolean requestModeration = true;
 }

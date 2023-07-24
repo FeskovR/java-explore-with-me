@@ -3,7 +3,8 @@ package ru.practicum.event.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.model.user.UserDto;
+import ru.practicum.event.enums.EventRequestStatus;
+import ru.practicum.user.model.UserDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,18 +14,19 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "participations")
-public class Participation {
+public class ParticipationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne
-    private EventFullDto event;
+    private EventEntity event;
 
     private LocalDateTime created;
 
     @ManyToOne
     private UserDto requester;
 
-    private String status;
+    @Enumerated(value = EnumType.STRING)
+    private EventRequestStatus status;
 }

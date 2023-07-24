@@ -4,6 +4,7 @@ package ru.practicum.event.service;
 import ru.practicum.event.enums.EventSort;
 import ru.practicum.event.model.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public interface EventService {
                                                              EventRequestStatusUpdateRequest body);
 
     // admin
-    List<EventShortDto> findEventsByAdmin(List<Integer> users,
+    List<EventFullDto> findEventsByAdmin(List<Integer> users,
                                    List<String> states,
                                    List<Integer> categories,
                                    LocalDateTime rangeStart,
@@ -45,13 +46,14 @@ public interface EventService {
     // public
     List<EventShortDto> findEventsPublic(String text,
                                    List<Integer> categories,
-                                   boolean paid,
+                                   Boolean paid,
                                    LocalDateTime rangeStart,
                                    LocalDateTime rangeEnd,
-                                   boolean onlyAvailable,
+                                   Boolean onlyAvailable,
                                    EventSort sort,
                                    int from,
-                                   int size);
+                                   int size,
+                                   HttpServletRequest request);
 
-    EventFullDto findEventByIdPublic(int id);
+    EventFullDto findEventByIdPublic(int id, HttpServletRequest request);
 }

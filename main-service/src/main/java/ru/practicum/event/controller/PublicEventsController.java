@@ -9,6 +9,7 @@ import ru.practicum.event.model.EventFullDto;
 import ru.practicum.event.model.EventShortDto;
 import ru.practicum.event.service.EventService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,22 +21,33 @@ public class PublicEventsController {
     EventService eventService;
 
     @GetMapping
-    public List<EventShortDto> findEvents(@RequestParam String text,
-                                          @RequestParam List<Integer> categories,
-                                          @RequestParam boolean paid,
-                                          @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
-                                          @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
-                                          @RequestParam boolean onlyAvailable,
-                                          @RequestParam EventSort sort,
-                                          @RequestParam int from,
-                                          @RequestParam int size) {
+    public List<EventShortDto> findEvents(@RequestParam(required = false) String text,
+                                          @RequestParam(required = false) List<Integer> categories,
+                                          @RequestParam(required = false) Boolean paid,
+                                          @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
+                                          @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
+                                          @RequestParam(required = false) Boolean onlyAvailable,
+                                          @RequestParam(required = false) EventSort sort,
+                                          @RequestParam(required = false, defaultValue = "0") int from,
+                                          @RequestParam(required = false, defaultValue = "10") int size,
+                                          HttpServletRequest request) {
         log.info("Getting public events");
-        return eventService.findEventsPublic(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+        return eventService.findEventsPublic(text,
+                categories,
+                paid,
+                rangeStart,
+                rangeEnd,
+                onlyAvailable,
+                sort,
+                from,
+                size,
+                request);
     }
 
     @GetMapping("/{id}")
-    public EventFullDto findEventById(@PathVariable int id) {
+    public EventFullDto findEventById(@PathVariable int id,
+                                      HttpServletRequest request) {
         log.info("Getting event by id {}", id);
-        return eventService.findEventByIdPublic(id);
+        return eventService.findEventByIdPublic(id, request);
     }
 }

@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 
 @UtilityClass
 public class EventMapper {
+
     public EventEntity toEventEntity(NewEventDto newEventDto,
                                      CategoryDto category,
                                      UserDto initiator) {
@@ -38,16 +39,26 @@ public class EventMapper {
     public EventEntity toEventEntity(UpdateEventUserRequest update,
                                      EventEntity eventToUpdate,
                                      CategoryDto category) {
-        eventToUpdate.setTitle(update.getTitle());
-        eventToUpdate.setAnnotation(update.getAnnotation());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        if (update.getTitle() != null)
+            eventToUpdate.setTitle(update.getTitle());
+        if (update.getAnnotation() != null)
+            eventToUpdate.setAnnotation(update.getAnnotation());
         eventToUpdate.setCategory(category);
-        eventToUpdate.setDescription(update.getDescription());
-        eventToUpdate.setEventDate(update.getEventDate());
-        eventToUpdate.setLocationLat(update.getLocation().getLat());
-        eventToUpdate.setLocationLon(update.getLocation().getLon());
-        eventToUpdate.setPaid(update.isPaid());
-        eventToUpdate.setParticipantLimit(update.getParticipantLimit());
-        eventToUpdate.setRequestModeration(update.isRequestModeration());
+        if (update.getDescription() != null)
+            eventToUpdate.setDescription(update.getDescription());
+        if (update.getEventDate() != null)
+            eventToUpdate.setEventDate(LocalDateTime.parse(update.getEventDate(), formatter));
+        if (update.getLocation() != null) {
+            eventToUpdate.setLocationLat(update.getLocation().getLat());
+            eventToUpdate.setLocationLon(update.getLocation().getLon());
+        }
+        if (update.getPaid() != null)
+            eventToUpdate.setPaid(update.getPaid());
+        if (update.getParticipantLimit() != 0)
+            eventToUpdate.setParticipantLimit(update.getParticipantLimit());
+        if (update.getRequestModeration() != null)
+            eventToUpdate.setRequestModeration(update.getRequestModeration());
         if (update.getStateAction() == UserEventState.SEND_TO_REVIEW) {
             eventToUpdate.setState(EventStatus.PENDING);
         } else if (update.getStateAction() == UserEventState.CANCEL_REVIEW) {
@@ -60,31 +71,65 @@ public class EventMapper {
     public EventEntity toEventEntity(UpdateEventAdminRequest update,
                                      EventEntity eventToUpdate,
                                      CategoryDto category) {
-        eventToUpdate.setTitle(update.getTitle());
-        eventToUpdate.setAnnotation(update.getAnnotation());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        if (update.getTitle() != null)
+            eventToUpdate.setTitle(update.getTitle());
+        if (update.getAnnotation() != null)
+            eventToUpdate.setAnnotation(update.getAnnotation());
         eventToUpdate.setCategory(category);
-        eventToUpdate.setDescription(update.getDescription());
-        eventToUpdate.setEventDate(update.getEventDate());
-        eventToUpdate.setLocationLat(update.getLocation().getLat());
-        eventToUpdate.setLocationLon(update.getLocation().getLon());
-        eventToUpdate.setPaid(update.isPaid());
-        eventToUpdate.setParticipantLimit(update.getParticipantLimit());
-        eventToUpdate.setRequestModeration(update.isRequestModeration());
+        if (update.getDescription() != null)
+            eventToUpdate.setDescription(update.getDescription());
+        if (update.getEventDate() != null)
+            eventToUpdate.setEventDate(LocalDateTime.parse(update.getEventDate(), formatter));
+        if (update.getLocation() != null) {
+            eventToUpdate.setLocationLat(update.getLocation().getLat());
+            eventToUpdate.setLocationLon(update.getLocation().getLon());
+        }
+        if (update.getPaid() != null)
+            eventToUpdate.setPaid(update.getPaid());
+        if (update.getParticipantLimit() != 0)
+            eventToUpdate.setParticipantLimit(update.getParticipantLimit());
+        if (update.getRequestModeration() != null)
+            eventToUpdate.setRequestModeration(update.getRequestModeration());
         if (update.getStateAction() == AdminEventState.REJECT_EVENT) {
             eventToUpdate.setState(EventStatus.CANCELED);
         } else if (update.getStateAction() == AdminEventState.PUBLISH_EVENT) {
             eventToUpdate.setState(EventStatus.PUBLISHED);
+            eventToUpdate.setPublishedOn(LocalDateTime.now());
         }
 
         return eventToUpdate;
     }
 
-    public EventFullDto toEventFullDto(EventEntity eventEntity,
-                                       int views) {
+    public EventEntity toEventEntity(EventFullDto eventFullDto) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        return new EventEntity(eventFullDto.getId(),
+                eventFullDto.getTitle(),
+                eventFullDto.getAnnotation(),
+                eventFullDto.getDescription(),
+                LocalDateTime.parse(eventFullDto.getCreatedOn(), formatter),
+                LocalDateTime.parse(eventFullDto.getEventDate(), formatter),
+                eventFullDto.getPublishedOn() == null ? null : LocalDateTime.parse(eventFullDto.getPublishedOn(), formatter),
+                eventFullDto.getPaid(),
+                eventFullDto.getRequestModeration(),
+                eventFullDto.getParticipantLimit(),
+                eventFullDto.getConfirmedRequests(),
+                eventFullDto.getState(),
+                eventFullDto.getLocation().getLat(),
+                eventFullDto.getLocation().getLon(),
+                eventFullDto.getCategory(),
+                new UserDto());
+    }
+
+    public EventFullDto toEventFullDto(EventEntity eventEntity) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String createdOn = eventEntity.getCreatedOn().format(formatter);
         String eventDate = eventEntity.getEventDate().format(formatter);
-        String publishedOn = eventEntity.getPublishedOn().format(formatter);
+        String publishedOn = null;
+        if (eventEntity.getPublishedOn() != null) {
+            publishedOn = eventEntity.getPublishedOn().format(formatter);
+        }
         Location location = new Location(
                 eventEntity.getLocationLat(),
                 eventEntity.getLocationLon()
@@ -103,13 +148,12 @@ public class EventMapper {
                 eventEntity.getConfirmedRequests(),
                 eventEntity.getState(),
                 eventEntity.getCategory(),
-                eventEntity.getInitiator(),
+                UserMapper.toUserShortDto(eventEntity.getInitiator()),
                 location,
-                views);
+                0);
     }
 
-    public EventShortDto toEventShortDto(EventEntity eventEntity,
-                                         int views) {
+    public EventShortDto toEventShortDto(EventEntity eventEntity) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String eventDate = eventEntity.getEventDate().format(formatter);
         UserShortDto initiator = UserMapper.toUserShortDto(eventEntity.getInitiator());
@@ -120,7 +164,7 @@ public class EventMapper {
                 eventEntity.getConfirmedRequests(),
                 eventDate,
                 eventEntity.getPaid(),
-                views,
+                0,
                 eventEntity.getCategory(),
                 initiator);
     }

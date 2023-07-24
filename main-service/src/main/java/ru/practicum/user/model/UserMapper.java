@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class UserMapper {
+
     public UserDto toUserDto(NewUserRequest newUserRequest) {
         return new UserDto(0, newUserRequest.getName(), newUserRequest.getEmail());
     }

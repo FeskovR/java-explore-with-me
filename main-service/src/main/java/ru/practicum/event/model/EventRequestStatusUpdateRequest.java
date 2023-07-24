@@ -3,7 +3,7 @@ package ru.practicum.event.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.enums.EventRequestStatus;
+import ru.practicum.event.enums.EventRequestStatus;
 
 import java.util.List;
 

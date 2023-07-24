@@ -18,8 +18,8 @@ public class PrivateEventsController {
 
     @GetMapping
     public List<EventShortDto> findAllUserEvents(@PathVariable int userId,
-                                                 @RequestParam int from,
-                                                 @RequestParam int size) {
+                                                 @RequestParam(required = false, defaultValue = "0") int from,
+                                                 @RequestParam(required = false, defaultValue = "10") int size) {
         log.info("Getting all events by user id: {}", userId);
         return eventService.findAllUserEventsByUser(userId, from, size);
     }

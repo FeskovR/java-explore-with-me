@@ -3,8 +3,14 @@ package ru.practicum.util;
 import lombok.experimental.UtilityClass;
 import ru.practicum.category.model.CategoryDto;
 import ru.practicum.category.model.NewCategoryDto;
+import ru.practicum.compilation.model.CompilationDto;
+import ru.practicum.compilation.model.NewCompilationDto;
 import ru.practicum.error.exception.ValidationException;
+import ru.practicum.event.model.EventEntity;
+import ru.practicum.event.model.NewEventDto;
 import ru.practicum.user.model.NewUserRequest;
+
+import java.time.LocalDateTime;
 
 @UtilityClass
 public class Validator {
@@ -62,6 +68,89 @@ public class Validator {
 
         if (emailLocalpart.length() > 64 || emailDomainpart.length() > 63) {
             throw new ValidationException("Incorrect email format");
+        }
+    }
+
+    public void validate(NewEventDto newEventDto) {
+        if (newEventDto.getTitle() == null ||
+            newEventDto.getTitle().isEmpty() ||
+            newEventDto.getTitle().isBlank() ||
+            newEventDto.getAnnotation() == null ||
+            newEventDto.getAnnotation().isEmpty() ||
+            newEventDto.getAnnotation().isBlank() ||
+            newEventDto.getCategory() == null ||
+            newEventDto.getDescription() == null ||
+            newEventDto.getDescription().isEmpty() ||
+            newEventDto.getDescription().isBlank() ||
+            newEventDto.getEventDate() == null ||
+            newEventDto.getLocation() == null) {
+            throw new ValidationException("All required fields must not be empty");
+        }
+
+        if (newEventDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
+            throw new ValidationException("Event date cannot be earlier than 2 hours");
+        }
+
+        if (newEventDto.getAnnotation().length() < 20 ||
+            newEventDto.getAnnotation().length() > 2000 ||
+            newEventDto.getDescription().length() < 20 ||
+            newEventDto.getDescription().length() > 7000 ||
+            newEventDto.getTitle().length() < 3 ||
+            newEventDto.getTitle().length() > 120) {
+            throw new ValidationException("Invalid length of fields");
+        }
+    }
+
+    public void validate(EventEntity eventEntity) {
+        if (eventEntity.getTitle() == null ||
+                eventEntity.getTitle().isEmpty() ||
+                eventEntity.getTitle().isBlank() ||
+                eventEntity.getAnnotation() == null ||
+                eventEntity.getAnnotation().isEmpty() ||
+                eventEntity.getAnnotation().isBlank() ||
+                eventEntity.getCategory() == null ||
+                eventEntity.getDescription() == null ||
+                eventEntity.getDescription().isEmpty() ||
+                eventEntity.getDescription().isBlank() ||
+                eventEntity.getEventDate() == null) {
+            throw new ValidationException("All required fields must not be empty");
+        }
+
+        if (eventEntity.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
+            throw new ValidationException("Event date cannot be earlier than 2 hours");
+        }
+
+        if (eventEntity.getAnnotation().length() < 20 ||
+                eventEntity.getAnnotation().length() > 2000 ||
+                eventEntity.getDescription().length() < 20 ||
+                eventEntity.getDescription().length() > 7000 ||
+                eventEntity.getTitle().length() < 3 ||
+                eventEntity.getTitle().length() > 120) {
+            throw new ValidationException("Invalid length of fields");
+        }
+    }
+
+    public void validate(NewCompilationDto newCompilationDto) {
+        if (newCompilationDto.getTitle() == null ||
+            newCompilationDto.getTitle().isBlank() ||
+            newCompilationDto.getTitle().isEmpty()) {
+            throw new ValidationException("Invalid compilation title");
+        }
+
+        if (newCompilationDto.getTitle().length() > 50) {
+            throw new ValidationException("Invalid compilation title length");
+        }
+    }
+
+    public void validate(CompilationDto compilationDto) {
+        if (compilationDto.getTitle() == null ||
+                compilationDto.getTitle().isBlank() ||
+                compilationDto.getTitle().isEmpty()) {
+            throw new ValidationException("Invalid compilation title");
+        }
+
+        if (compilationDto.getTitle().length() > 50) {
+            throw new ValidationException("Invalid compilation title length");
         }
     }
 }

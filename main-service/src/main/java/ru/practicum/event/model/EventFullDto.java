@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.category.model.CategoryDto;
 import ru.practicum.event.enums.EventStatus;
-import ru.practicum.user.model.UserDto;
+import ru.practicum.user.model.UserShortDto;
 
 @Data
 @AllArgsConstructor
@@ -24,7 +24,7 @@ public class EventFullDto {
     private int confirmedRequests;
     private EventStatus state;
     private CategoryDto category;
-    private UserDto initiator;
+    private UserShortDto initiator;
     private Location location;
-    private int views;
+    private long views;
 }

@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.event.model.EventFullDto;
-import ru.practicum.event.model.EventShortDto;
 import ru.practicum.event.model.UpdateEventAdminRequest;
 import ru.practicum.event.service.EventService;
 
@@ -20,7 +19,7 @@ public class AdminEventsController {
     EventService eventService;
 
     @GetMapping
-    public List<EventShortDto> findEvents(@RequestParam(required = false) List<Integer> users,
+    public List<EventFullDto> findEvents(@RequestParam(required = false) List<Integer> users,
                                           @RequestParam(required = false) List<String> states,
                                           @RequestParam(required = false) List<Integer> categories,
                                           @RequestParam(required = false)
