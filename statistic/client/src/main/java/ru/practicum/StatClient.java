@@ -9,13 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.error.ValidationException;
 import ru.practicum.model.HitDto;
 import ru.practicum.model.StatDto;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.List;
 
 @Service
 public class StatClient extends BaseClient {
@@ -34,12 +31,6 @@ public class StatClient extends BaseClient {
                       String end,
                       List<String> uris,
                       Boolean unique) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        if (start != null &&
-            end != null &&
-            LocalDateTime.parse(end, formatter).isBefore(LocalDateTime.parse(start, formatter))) {
-            throw new ValidationException("Invalid start-end range");
-        }
         String startParam = "start=" + start;
         String endParam = "end=" + end;
         String urisParam = null;
