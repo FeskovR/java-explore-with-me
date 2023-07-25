@@ -30,6 +30,7 @@ services:
     image: main_service_img
     container_name: main_service_cont
     depends_on:
+      - stats-server
       - main-db
     ports:
       - "8080:8080"

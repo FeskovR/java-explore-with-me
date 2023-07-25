@@ -6,13 +6,13 @@ import ru.practicum.error.exception.BreakingRulesException;
 import ru.practicum.error.exception.NotFoundException;
 import ru.practicum.event.enums.EventRequestStatus;
 import ru.practicum.event.enums.EventStatus;
-import ru.practicum.event.model.EventEntity;
-import ru.practicum.event.model.ParticipationEntity;
+import ru.practicum.event.model.Event;
+import ru.practicum.event.model.Participation;
 import ru.practicum.event.model.ParticipationRequestDto;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.request.model.ParticipationMapper;
 import ru.practicum.request.repository.RequestRepository;
-import ru.practicum.user.model.UserDto;
+import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
@@ -33,10 +33,10 @@ public class RequestServiceImpl implements RequestService {
                 () -> new NotFoundException("User id " + userId + " not found")
         );
 
-        List<ParticipationEntity> requests = requestRepository.findAllByRequesterId(userId);
+        List<Participation> requests = requestRepository.findAllByRequesterId(userId);
         List<ParticipationRequestDto> result = new ArrayList<>();
 
-        for (ParticipationEntity request : requests) {
+        for (Participation request : requests) {
             result.add(ParticipationMapper.toParticipationRequestDto(request));
         }
 
@@ -45,11 +45,11 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public ParticipationRequestDto addNewRequest(int userId, int eventId) {
-        UserDto userDto = userRepository.findById(userId).orElseThrow(
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("User id " + userId + " not found")
         );
 
-        EventEntity event = eventRepository.findById(eventId).orElseThrow(
+        Event event = eventRepository.findById(eventId).orElseThrow(
                 () -> new NotFoundException("Event id " + eventId + " not found")
         );
 
@@ -66,7 +66,7 @@ public class RequestServiceImpl implements RequestService {
             throw new BreakingRulesException("Limit of participant");
         }
 
-        Optional<ParticipationEntity> checkedParticipation = requestRepository.findRequestByEventIdAndRequesterId(
+        Optional<Participation> checkedParticipation = requestRepository.findRequestByEventIdAndRequesterId(
                 eventId,
                 userId
         );
@@ -75,10 +75,10 @@ public class RequestServiceImpl implements RequestService {
                     " is already exist");
         }
 
-        ParticipationEntity participation = new ParticipationEntity(0,
+        Participation participation = new Participation(0,
                 event,
                 LocalDateTime.now(),
-                userDto,
+                user,
                 EventRequestStatus.PENDING);
 
         if (!event.getRequestModeration() || event.getParticipantLimit() == 0) {
@@ -89,9 +89,9 @@ public class RequestServiceImpl implements RequestService {
             event.setConfirmedRequests(event.getConfirmedRequests() + 1);
         }
         eventRepository.save(event);
-        ParticipationEntity returnedParticipationEntity = requestRepository.save(participation);
+        Participation returnedParticipation = requestRepository.save(participation);
 
-        return ParticipationMapper.toParticipationRequestDto(returnedParticipationEntity);
+        return ParticipationMapper.toParticipationRequestDto(returnedParticipation);
     }
 
     @Override
@@ -100,13 +100,13 @@ public class RequestServiceImpl implements RequestService {
                 () -> new NotFoundException("User id " + userId + " not found")
         );
 
-        ParticipationEntity request = requestRepository.findById(requestId).orElseThrow(
+        Participation request = requestRepository.findById(requestId).orElseThrow(
                 () -> new NotFoundException("Request not found")
         );
 
         request.setStatus(EventRequestStatus.CANCELED);
 
-        ParticipationEntity updated = requestRepository.save(request);
+        Participation updated = requestRepository.save(request);
 
         return ParticipationMapper.toParticipationRequestDto(updated);
     }

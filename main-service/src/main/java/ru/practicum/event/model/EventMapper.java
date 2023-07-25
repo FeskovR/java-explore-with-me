@@ -1,11 +1,11 @@
 package ru.practicum.event.model;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.category.model.CategoryDto;
+import ru.practicum.category.model.Category;
 import ru.practicum.event.enums.AdminEventState;
 import ru.practicum.event.enums.EventStatus;
 import ru.practicum.event.enums.UserEventState;
-import ru.practicum.user.model.UserDto;
+import ru.practicum.user.model.User;
 import ru.practicum.user.model.UserMapper;
 import ru.practicum.user.model.UserShortDto;
 
@@ -15,18 +15,18 @@ import java.time.format.DateTimeFormatter;
 @UtilityClass
 public class EventMapper {
 
-    public EventEntity toEventEntity(NewEventDto newEventDto,
-                                     CategoryDto category,
-                                     UserDto initiator) {
-        return new EventEntity(0,
+    public Event toEventEntity(NewEventDto newEventDto,
+                               Category category,
+                               User initiator) {
+        return new Event(0,
                 newEventDto.getTitle(),
                 newEventDto.getAnnotation(),
                 newEventDto.getDescription(),
                 LocalDateTime.now(),
                 newEventDto.getEventDate(),
                 null,
-                newEventDto.isPaid(),
-                newEventDto.isRequestModeration(),
+                newEventDto.getPaid(),
+                newEventDto.getRequestModeration(),
                 newEventDto.getParticipantLimit(),
                 0,
                 EventStatus.PENDING,
@@ -36,9 +36,9 @@ public class EventMapper {
                 initiator);
     }
 
-    public EventEntity toEventEntity(UpdateEventUserRequest update,
-                                     EventEntity eventToUpdate,
-                                     CategoryDto category) {
+    public Event toEventEntity(UpdateEventUserRequest update,
+                               Event eventToUpdate,
+                               Category category) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         if (update.getTitle() != null)
             eventToUpdate.setTitle(update.getTitle());
@@ -68,9 +68,9 @@ public class EventMapper {
         return eventToUpdate;
     }
 
-    public EventEntity toEventEntity(UpdateEventAdminRequest update,
-                                     EventEntity eventToUpdate,
-                                     CategoryDto category) {
+    public Event toEventEntity(UpdateEventAdminRequest update,
+                               Event eventToUpdate,
+                               Category category) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         if (update.getTitle() != null)
             eventToUpdate.setTitle(update.getTitle());
@@ -101,10 +101,10 @@ public class EventMapper {
         return eventToUpdate;
     }
 
-    public EventEntity toEventEntity(EventFullDto eventFullDto) {
+    public Event toEventEntity(EventFullDto eventFullDto) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        return new EventEntity(eventFullDto.getId(),
+        return new Event(eventFullDto.getId(),
                 eventFullDto.getTitle(),
                 eventFullDto.getAnnotation(),
                 eventFullDto.getDescription(),
@@ -119,53 +119,53 @@ public class EventMapper {
                 eventFullDto.getLocation().getLat(),
                 eventFullDto.getLocation().getLon(),
                 eventFullDto.getCategory(),
-                new UserDto());
+                new User());
     }
 
-    public EventFullDto toEventFullDto(EventEntity eventEntity) {
+    public EventFullDto toEventFullDto(Event event) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String createdOn = eventEntity.getCreatedOn().format(formatter);
-        String eventDate = eventEntity.getEventDate().format(formatter);
+        String createdOn = event.getCreatedOn().format(formatter);
+        String eventDate = event.getEventDate().format(formatter);
         String publishedOn = null;
-        if (eventEntity.getPublishedOn() != null) {
-            publishedOn = eventEntity.getPublishedOn().format(formatter);
+        if (event.getPublishedOn() != null) {
+            publishedOn = event.getPublishedOn().format(formatter);
         }
         Location location = new Location(
-                eventEntity.getLocationLat(),
-                eventEntity.getLocationLon()
+                event.getLocationLat(),
+                event.getLocationLon()
         );
 
-        return new EventFullDto(eventEntity.getId(),
-                eventEntity.getTitle(),
-                eventEntity.getAnnotation(),
-                eventEntity.getDescription(),
+        return new EventFullDto(event.getId(),
+                event.getTitle(),
+                event.getAnnotation(),
+                event.getDescription(),
                 createdOn,
                 eventDate,
                 publishedOn,
-                eventEntity.getPaid(),
-                eventEntity.getRequestModeration(),
-                eventEntity.getParticipantLimit(),
-                eventEntity.getConfirmedRequests(),
-                eventEntity.getState(),
-                eventEntity.getCategory(),
-                UserMapper.toUserShortDto(eventEntity.getInitiator()),
+                event.getPaid(),
+                event.getRequestModeration(),
+                event.getParticipantLimit(),
+                event.getConfirmedRequests(),
+                event.getState(),
+                event.getCategory(),
+                UserMapper.toUserShortDto(event.getInitiator()),
                 location,
                 0);
     }
 
-    public EventShortDto toEventShortDto(EventEntity eventEntity) {
+    public EventShortDto toEventShortDto(Event event) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String eventDate = eventEntity.getEventDate().format(formatter);
-        UserShortDto initiator = UserMapper.toUserShortDto(eventEntity.getInitiator());
+        String eventDate = event.getEventDate().format(formatter);
+        UserShortDto initiator = UserMapper.toUserShortDto(event.getInitiator());
 
-        return new EventShortDto(eventEntity.getId(),
-                eventEntity.getTitle(),
-                eventEntity.getAnnotation(),
-                eventEntity.getConfirmedRequests(),
+        return new EventShortDto(event.getId(),
+                event.getTitle(),
+                event.getAnnotation(),
+                event.getConfirmedRequests(),
                 eventDate,
-                eventEntity.getPaid(),
+                event.getPaid(),
                 0,
-                eventEntity.getCategory(),
+                event.getCategory(),
                 initiator);
     }
 }

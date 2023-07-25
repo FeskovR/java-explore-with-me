@@ -54,6 +54,6 @@ CREATE TABLE If NOT EXISTS compilations(
 );
 
 CREATE TABLE IF NOT EXISTS compilations_events(
-    compilation_entity_id INTEGER,
+    compilation_id INTEGER,
     events_id INTEGER
 );

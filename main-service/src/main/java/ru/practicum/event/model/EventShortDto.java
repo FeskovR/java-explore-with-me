@@ -3,7 +3,7 @@ package ru.practicum.event.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.category.model.CategoryDto;
+import ru.practicum.category.model.Category;
 import ru.practicum.user.model.UserShortDto;
 
 @Data
@@ -17,6 +17,6 @@ public class EventShortDto {
     private String eventDate;
     private Boolean paid;
     private long views;
-    private CategoryDto category;
+    private Category category;
     private UserShortDto initiator;
 }

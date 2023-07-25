@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.category.service.CategoryService;
-import ru.practicum.category.model.CategoryDto;
+import ru.practicum.category.model.Category;
 import ru.practicum.category.model.NewCategoryDto;
 
 @RestController
@@ -17,7 +17,7 @@ public class AdminCategoryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoryDto addCategory(@RequestBody NewCategoryDto newCategory) {
+    public Category addCategory(@RequestBody NewCategoryDto newCategory) {
         log.info("Adding new category name {}", newCategory.getName());
         return categoryService.addCategory(newCategory);
     }
@@ -30,8 +30,8 @@ public class AdminCategoryController {
     }
 
     @PatchMapping("/{catId}")
-    public CategoryDto updateCategory(@PathVariable int catId,
-                                      @RequestBody CategoryDto updatedCategory) {
+    public Category updateCategory(@PathVariable int catId,
+                                   @RequestBody Category updatedCategory) {
         log.info("Updating category id {}", catId);
         return categoryService.updateCategory(catId, updatedCategory);
     }

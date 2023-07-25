@@ -3,9 +3,9 @@ package ru.practicum.event.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.category.model.CategoryDto;
+import ru.practicum.category.model.Category;
 import ru.practicum.event.enums.EventStatus;
-import ru.practicum.user.model.UserDto;
+import ru.practicum.user.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventEntity {
+public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -42,7 +42,7 @@ public class EventEntity {
     @Column(name = "location_lon")
     private double locationLon;
     @ManyToOne
-    private CategoryDto category;
+    private Category category;
     @ManyToOne
-    private UserDto initiator;
+    private User initiator;
 }

@@ -1,4 +1,4 @@
-package ru.practicum.util;
+package ru.practicum.event.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Service
 @AllArgsConstructor
-public class Statistic {
+public class StatisticService {
     private StatClient statClient;
 
     public Map<Integer, Long> getStat(List<Integer> eventIds,
@@ -64,14 +64,9 @@ public class Statistic {
     }
 
     public EventFullDto setViewsToEventFullDto(EventFullDto eventFullDto) {
-        List<Integer> eventsIds = new ArrayList<>();
-        eventsIds.add(eventFullDto.getId());
-        Map<Integer, Long> hits = getStat(eventsIds,
-                LocalDateTime.now().minusYears(10),
-                LocalDateTime.now(),
-                true);
-        eventFullDto.setViews(hits.get(eventFullDto.getId()));
-        return eventFullDto;
+        List<EventFullDto> eventFullDtoList = new ArrayList<>();
+        eventFullDtoList.add(eventFullDto);
+        return setViewsToEventFullDto(eventFullDtoList).get(0);
     }
 
     public List<EventShortDto> setViewsToEventShortDto(List<EventShortDto> events) {
@@ -88,16 +83,5 @@ public class Statistic {
         }
 
         return events;
-    }
-
-    public EventShortDto setViewsToEventShortDto(EventShortDto eventShortDto) {
-        List<Integer> eventsIds = new ArrayList<>();
-        eventsIds.add(eventShortDto.getId());
-        Map<Integer, Long> hits = getStat(eventsIds,
-                LocalDateTime.now().minusYears(10),
-                LocalDateTime.now(),
-                true);
-        eventShortDto.setViews(hits.get(eventShortDto.getId()));
-        return eventShortDto;
     }
 }

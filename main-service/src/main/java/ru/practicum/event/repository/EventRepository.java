@@ -5,30 +5,30 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.practicum.event.enums.EventStatus;
-import ru.practicum.event.model.EventEntity;
+import ru.practicum.event.model.Event;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface EventRepository extends JpaRepository<EventEntity, Integer> {
-    @Query("select e from EventEntity as e " +
+public interface EventRepository extends JpaRepository<Event, Integer> {
+    @Query("select e from Event as e " +
             "where e.initiator.id = :id")
-    List<EventEntity> findByInitiatorId(@Param("id") int id, Pageable pageable);
+    List<Event> findByInitiatorId(@Param("id") int id, Pageable pageable);
 
-    @Query("select e from EventEntity as e " +
+    @Query("select e from Event as e " +
             "where e.state = :state and e.id = :id ")
-    Optional<EventEntity> getEventByIdPublic(@Param("id") int id,
-                                             @Param("state") EventStatus state);
+    Optional<Event> getEventByIdPublic(@Param("id") int id,
+                                       @Param("state") EventStatus state);
 
-    @Query("select e from EventEntity as e " +
+    @Query("select e from Event as e " +
             "where e.state = 'PUBLISHED'")
-    List<EventEntity> findAllPublished();
+    List<Event> findAllPublished();
 
-    @Query("select e from EventEntity as e " +
+    @Query("select e from Event as e " +
             "where e.id in :ids")
-    List<EventEntity> findAllByIds(@Param("ids") List<Integer> ids);
+    List<Event> findAllByIds(@Param("ids") List<Integer> ids);
 
-    @Query("select e from EventEntity as e " +
+    @Query("select e from Event as e " +
             "where e.category.id = :eventId")
-    List<EventEntity> findAllEventsByCategoryId(@Param("eventId") int eventId);
+    List<Event> findAllEventsByCategoryId(@Param("eventId") int eventId);
 }
