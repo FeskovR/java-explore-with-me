@@ -3,6 +3,9 @@ package ru.practicum.util;
 import lombok.experimental.UtilityClass;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.model.NewCategoryDto;
+import ru.practicum.comments.model.NewCommentDto;
+import ru.practicum.comments.model.UpdateCommentByAdminRequest;
+import ru.practicum.comments.model.UpdateCommentByCommenterRequest;
 import ru.practicum.compilation.model.CompilationDto;
 import ru.practicum.compilation.model.NewCompilationDto;
 import ru.practicum.error.exception.ValidationException;
@@ -117,6 +120,55 @@ public class Validator {
 
         if (compilationDto.getTitle().length() > 50) {
             throw new ValidationException("Invalid compilation title length");
+        }
+    }
+
+    public void validate(NewCommentDto newCommentDto) {
+        if (newCommentDto.getTitle() == null ||
+            newCommentDto.getTitle().isBlank() ||
+            newCommentDto.getTitle().isEmpty()) {
+            throw new ValidationException("Invalid title field. Cannot be empty");
+        }
+
+        if (newCommentDto.getText() == null ||
+            newCommentDto.getText().isBlank() ||
+            newCommentDto.getText().isEmpty()) {
+            throw new ValidationException("Invalid text field. Cannot be empty");
+        }
+
+        if (newCommentDto.getTitle().length() < 10 ||
+            newCommentDto.getTitle().length() > 200 ||
+            newCommentDto.getText().length() < 50 ||
+            newCommentDto.getText().length() > 2000) {
+            throw new ValidationException("Invalid length of title or text");
+        }
+    }
+
+    public void validate(UpdateCommentByCommenterRequest updateCommentByCommenterRequest) {
+        if (updateCommentByCommenterRequest.getTitle() != null &&
+            updateCommentByCommenterRequest.getTitle().length() < 10 ||
+            updateCommentByCommenterRequest.getTitle().length() > 200) {
+            throw new ValidationException("Invalid length of title");
+        }
+
+        if (updateCommentByCommenterRequest.getText() != null &&
+            updateCommentByCommenterRequest.getText().length() < 50 ||
+            updateCommentByCommenterRequest.getText().length() > 2000) {
+            throw new ValidationException("Invalid length of text");
+        }
+    }
+
+    public void validate(UpdateCommentByAdminRequest updateCommentByAdminRequest) {
+        if (updateCommentByAdminRequest.getTitle() != null &&
+                (updateCommentByAdminRequest.getTitle().length() < 10 ||
+                updateCommentByAdminRequest.getTitle().length() > 200)) {
+            throw new ValidationException("Invalid length of title");
+        }
+
+        if (updateCommentByAdminRequest.getText() != null &&
+                (updateCommentByAdminRequest.getText().length() < 50 ||
+                updateCommentByAdminRequest.getText().length() > 2000)) {
+            throw new ValidationException("Invalid length of text");
         }
     }
 }
